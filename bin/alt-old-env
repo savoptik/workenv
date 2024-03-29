@@ -3,14 +3,14 @@
 WORKDIR="."
 mkdir -pv artifacts
 
-uid=500
-gid=500
-subuidSize=$(( $(podman info --format "{{ range \
-   .Host.IDMappings.UIDMap }}+{{.Size }}{{end }}" ) - 1 ))
-subgidSize=$(( $(podman info --format "{{ range \
-   .Host.IDMappings.GIDMap }}+{{.Size }}{{end }}" ) - 1 ))
-
 if [ ! -f /run/.containerenv ]; then
+    uid=500
+    gid=500
+    subuidSize=$(( $(podman info --format "{{ range \
+       .Host.IDMappings.UIDMap }}+{{.Size }}{{end }}" ) - 1 ))
+    subgidSize=$(( $(podman info --format "{{ range \
+       .Host.IDMappings.GIDMap }}+{{.Size }}{{end }}" ) - 1 ))
+
     podman run -it --rm --name $(mktemp -u savoptik-workenv-container-XXXXXX) \
     --security-opt seccomp=unconfined --cap-add all \
       --user $uid:$gid \
