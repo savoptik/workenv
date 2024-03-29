@@ -1,0 +1,15 @@
+#!/bin/sh -efu
+
+WORKDIR="."
+mkdir -pv artifacts
+
+if [ ! -f /run/.containerenv ]; then
+    podman run -it --rm --name $(mktemp -u savoptik-workenv-container-XXXXXX) \
+        --security-opt seccomp=unconfined --cap-add all \
+           -v "$WORKDIR:/host" -v "./artifacts:/artifacts" \
+           --userns=keep-id:uid=1000,gid=1000 \
+           --cap-add SYS_PTRACE \
+           ghcr.io/savoptik/workenv-container:1.0 bash $@
+else
+    bash $@
+fi

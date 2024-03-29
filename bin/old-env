@@ -1,0 +1,21 @@
+#!/bin/sh -efu
+
+WORKDIR="."
+mkdir -pv artifacts
+
+uid=500
+gid=500
+subuidSize=$(( $(podman info --format "{{ range \
+   .Host.IDMappings.UIDMap }}+{{.Size }}{{end }}" ) - 1 ))
+subgidSize=$(( $(podman info --format "{{ range \
+   .Host.IDMappings.GIDMap }}+{{.Size }}{{end }}" ) - 1 ))
+
+if [ ! -f /run/.containerenv ]; then
+    podman run -it --rm --name $(mktemp -u savoptik-workenv-container-XXXXXX) \
+    --security-opt seccomp=unconfined --cap-add all \
+           -v "$WORKDIR:/host" -v "$WORKDIR/artifacts:/artifacts" \
+           --cap-add SYS_PTRACE \
+           ghcr.io/savoptik/workenv-container:1.0 bash $@
+else
+    bash $@
+fi
