@@ -9,7 +9,7 @@ if [ ! -f /run/.containerenv ]; then
            -v "$WORKDIR:/host" -v "./artifacts:/artifacts" \
            --userns=keep-id:uid=1000,gid=1000 \
            --cap-add SYS_PTRACE \
-           ghcr.io/savoptik/workenv-container:1.0 bash $@
+           ghcr.io/savoptik/workenv-container:1.1 bash $@
 else
     bash $@
 fi

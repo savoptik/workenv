@@ -26,6 +26,7 @@ RUN apt-get update && apt-get dist-upgrade -y && \
     vim-enhanced nano mc bat less patch gnuplot \
     AFLplusplus \
     python3-dev python3-module-setuptools python3-module-pip \
+    java-21-openjdk-devel \
     bash-completion
 
 ENV TZ=Europe/Moscow
@@ -39,16 +40,29 @@ RUN echo 'WHEEL_USERS ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
 
 WORKDIR /root
 
-        ENV JAVA_HOME=/usr/lib/jvm/java-21-openjdk \
-BOOT_JDK_VERSION=21.0.2
+WORKDIR /root
 
-RUN wget https://download.java.net/java/GA/jdk21.0.2/f2283984656d49d69e91c558476027ac/13/GPL/openjdk-21.0.2_linux-x64_bin.tar.gz && \
-    tar -vxf openjdk-21.0.2_linux-x64_bin.tar.gz && \
-    mkdir -pv /usr/lib/jvm && \
-    mv jdk-$BOOT_JDK_VERSION $JAVA_HOME && \
-    rm openjdk-21.0.2_linux-x64_bin.tar.gz
+ENV BOOT_JDK_VERSION=22.0 \
+JAVA_REPO=jdk22u \
+JAVA_TAG=jdk-22-ga
 
-ENV JTREG_VERSION=7.3.1+1
+RUN git clone https://git.openjdk.org/$JAVA_REPO && \
+cd $JAVA_REPO && \
+git checkout $JAVA_TAG && \
+mkdir jdk-$BOOT_JDK_VERSION-build && cd jdk-$BOOT_JDK_VERSION-build && \
+bash ../configure \
+--with-toolchain-type=clang && \
+make images
+
+ENV JAVA_HOME=/usr/lib/jvm/java-22-openjdk
+WORKDIR /root/$JAVA_REPO/jdk-$BOOT_JDK_VERSION-build
+
+    RUN mkdir -pv /usr/lib/jvm && \
+    mv images/jdk/ $JAVA_HOME && \
+    cd ../../ && \
+   rm -rf $JAVA_REPO
+
+        ENV JTREG_VERSION=7.3.1+1
 
 WORKDIR /home/user/
 RUN git clone https://git.openjdk.org/jtreg && \
