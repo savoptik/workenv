@@ -1,4 +1,34 @@
 #!/bin/sh -efu
 
+WORKDIR=$PWD
+
+cd $WORKDIR
+
+#create dirs
+ARTIFACTS_DIR=$WORKDIR/artifacts
+OUTPUT_DIR=$ARTIFACTS_DIR/output
+LOGS_DIR=$OUTPUT_DIR/build-image-logs
+CONTAINER_DIR=$WORKDIR/container
+ALT_CONTAINERFILE=$CONTAINER_DIR/Containerfile.alt
+
+mkdir -pv $LOGS_DIR
+
+#set names
+VENDER_NAME=altlinux
+BRANCH_NAME=p10
+PROJECT_NAME=workenv
+DEV_NAME=savoptik
+REGISTRY=ghcr.io
+IMAGE_NAME=$VENDER_NAME-$BRANCH_NAME-$PROJECT_NAME
+REF_NAME="$DEV_NAME-$IMAGE_NAME"
+TAG_NAME=full
+VERSION=1.3.0
+FULL_NAME=$REGISTRY/$DEV_NAME/$IMAGE_NAME
+
+#build image
 podman build --force-rm=true --build-arg cuid="$(id -u)" --build-arg cgid="$(id -g)" \
-	 -t ghcr.io/savoptik/workenv-container -f ./container/Containerfile.alt 2>&1 | tee ./build.log
+	 -t $REF_NAME -f $ALT_CONTAINERFILE 2>&1 | tee $LOGS_DIR/build.log
+
+#set tags
+podman image tag $REF_NAME:latest $FULL_NAME:latest
+podman image tag $REF_NAME:latest $FULL_NAME:$TAG_NAME-$VERSION

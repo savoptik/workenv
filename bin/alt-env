@@ -3,13 +3,26 @@
 WORKDIR="."
 mkdir -pv artifacts
 
+#set names
+VENDER_NAME=altlinux
+BRANCH_NAME=p10
+PROJECT_NAME=workenv
+DEV_NAME=savoptik
+REGISTRY=ghcr.io
+IMAGE_NAME=$VENDER_NAME-$BRANCH_NAME-$PROJECT_NAME
+REF_NAME="$DEV_NAME-$IMAGE_NAME"
+TAG_NAME=full
+VERSION=1.3.0
+FULL_NAME=$REGISTRY/$DEV_NAME/$IMAGE_NAME:$TAG_NAME-$VERSION
+
+#RUN
 if [ ! -f /run/.containerenv ]; then
     podman run -it --rm --name $(mktemp -u savoptik-workenv-container-XXXXXX) \
         --security-opt seccomp=unconfined --cap-add all \
            -v "$WORKDIR:/host" -v "./artifacts:/artifacts" \
            --userns=keep-id:uid=1000,gid=1000 \
            --cap-add SYS_PTRACE \
-           ghcr.io/savoptik/workenv-container:1.1 bash $@
+           $FULL_NAME bash $@
 else
     bash $@
 fi
