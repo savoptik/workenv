@@ -17,7 +17,7 @@ FULL_NAME=$REGISTRY/$DEV_NAME/$IMAGE_NAME:$TAG_NAME-$VERSION
 
 #RUN
 if [ ! -f /run/.containerenv ]; then
-    podman run -it --rm --name $(mktemp -u savoptik-workenv-container-XXXXXX) \
+    podman run -it --rm --name $(mktemp -u $REF_NAME-XXXXXX) \
         --security-opt seccomp=unconfined --cap-add all \
            -v "$WORKDIR:/host" -v "./artifacts:/artifacts" \
            --userns=keep-id:uid=1000,gid=1000 \

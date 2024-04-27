@@ -24,7 +24,7 @@ if [ ! -f /run/.containerenv ]; then
     subgidSize=$(( $(podman info --format "{{ range \
        .Host.IDMappings.GIDMap }}+{{.Size }}{{end }}" ) - 1 ))
 
-    podman run -it --rm --name $(mktemp -u savoptik-workenv-container-XXXXXX) \
+    podman run -it --rm --name $(mktemp -u $REF_NAME-XXXXXX) \
     --security-opt seccomp=unconfined --cap-add all \
       --user $uid:$gid \
       --uidmap 0:1:$uid \
