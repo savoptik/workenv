@@ -12,9 +12,10 @@ ENV ALTWRAP_LLVM_VERSION=15.0 \
 
 RUN apt-get update && apt-get dist-upgrade -y && \
     apt-get install -y sudo su git netcat curl wget passwd startup \
-    gcc6-c++ gcc6-plugin-devel libstdc++6-devel \
+    gcc-c++ gcc-plugin-devel libstdc++-devel \
     glibc-core glibc-devel glibc-devel-static glib2-devel \
     make automake cmake autoconf \
+    java-1.8.0-openjdk java-11-openjdk java-17-openjdk java-21-openjdk \
     perl-podlators \
     libX11-devel libXext-devel libXrender-devel \
     libXtst-devel libXt-devel libXrandr-devel \
