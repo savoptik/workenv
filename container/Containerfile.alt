@@ -1,8 +1,8 @@
-FROM ghcr.io/savoptik/alt:p10
+FROM registry.altlinux.org/alt/alt:p10
 
 USER root
 
-ENV ALTWRAP_LLVM_VERSION=15.0 \
+ENV ALTWRAP_LLVM_VERSION=17.0 \
     CC=clang \
     CXX=clang++ \
     LD=ld.lld \
@@ -12,6 +12,7 @@ ENV ALTWRAP_LLVM_VERSION=15.0 \
 
 RUN apt-get update && apt-get dist-upgrade -y && \
     apt-get install -y sudo su git netcat curl wget passwd startup \
+    llvm17.0-devel clang17.0-devel lld17.0-devel \
     gcc-c++ gcc-plugin-devel libstdc++-devel \
     glibc-core glibc-devel glibc-devel-static glib2-devel \
     make automake cmake autoconf \
@@ -24,6 +25,12 @@ RUN apt-get update && apt-get dist-upgrade -y && \
     strace \
     vim-enhanced nano mc bat less patch gnuplot \
     bash-completion
+
+WORKDIR /root
+RUN wget https://download.java.net/java/early_access/jdk24/24/GPL/openjdk-24-ea+24_linux-x64_bin.tar.gz && \
+tar -xvzf openjdk-24-ea+24_linux-x64_bin.tar.gz && \
+mv -v jdk-24 /usr/lib/jvm/java-24.0-openjdk && \
+rm -rfv openjdk-24-ea+24_linux-x64_bin.tar.gz
 
 ENV TZ=Europe/Moscow
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
