@@ -29,8 +29,12 @@ RUN apt-get update && apt-get dist-upgrade -y && \
 WORKDIR /root
 RUN wget https://download.java.net/java/early_access/jdk24/24/GPL/openjdk-24-ea+24_linux-x64_bin.tar.gz && \
 tar -xvzf openjdk-24-ea+24_linux-x64_bin.tar.gz && \
-mv -v jdk-24 /usr/lib/jvm/java-24.0-openjdk && \
-rm -rfv openjdk-24-ea+24_linux-x64_bin.tar.gz
+mv -v jdk-24 /usr/lib/jvm/java-24-openjdk && \
+rm -rfv openjdk-24-ea+24_linux-x64_bin.tar.gz \ && \
+wget https://download.java.net/java/GA/jdk23.0.1/c28985cbf10d4e648e4004050f8781aa/11/GPL/openjdk-23.0.1_linux-x64_bin.tar.gz && \
+tar -xvzf openjdk-23.0.1_linux-x64_bin.tar.gz && \
+mv -v jdk-23.0 /usr/lib/jvm/java-23-openjdk && \
+rm -rfv openjdk-23.0.1_linux-x64_bin.tar.gz
 
 ENV TZ=Europe/Moscow
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
