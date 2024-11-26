@@ -1,7 +1,6 @@
 #!/bin/sh -efu
 
 WORKDIR="."
-mkdir -pv artifacts
 
 #set names
 VENDER_NAME=altlinux
@@ -12,7 +11,7 @@ REGISTRY=ghcr.io
 IMAGE_NAME=$VENDER_NAME-$BRANCH_NAME-$PROJECT_NAME
 REF_NAME="$DEV_NAME-$IMAGE_NAME"
 TAG_NAME=full
-VERSION=1.5.1
+VERSION=1.5.2
 FULL_NAME=$REGISTRY/$DEV_NAME/$IMAGE_NAME:$TAG_NAME-$VERSION
 
 # run
@@ -23,6 +22,8 @@ if [ ! -f /run/.containerenv ]; then
        .Host.IDMappings.UIDMap }}+{{.Size }}{{end }}" ) - 1 ))
     subgidSize=$(( $(podman info --format "{{ range \
        .Host.IDMappings.GIDMap }}+{{.Size }}{{end }}" ) - 1 ))
+
+mkdir -pv artifacts
 
     podman run -it --rm --name $(mktemp -u $REF_NAME-XXXXXX) \
     --security-opt seccomp=unconfined --cap-add all \
