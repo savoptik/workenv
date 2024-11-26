@@ -36,6 +36,16 @@ tar -xvzf openjdk-23.0.1_linux-x64_bin.tar.gz && \
 mv -v jdk-23.0.1 /usr/lib/jvm/java-23-openjdk && \
 rm -rfv openjdk-23.0.1_linux-x64_bin.tar.gz
 
+ENV JAVA_HOME=/usr/lib/jvm/java-23-openjdk
+ENV JTREG_VERSION=7.3.1+1
+
+WORKDIR /home/user/
+RUN git clone https://git.openjdk.org/jtreg && \
+cd jtreg && \
+bash make/build.sh
+
+ENV JTREG_HOME=/home/user/jtreg/build/images/jtreg/
+
 ENV TZ=Europe/Moscow
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     echo $TZ > /etc/timezone
