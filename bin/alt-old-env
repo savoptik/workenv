@@ -4,7 +4,7 @@ WORKDIR="."
 
 #set names
 VENDER_NAME=altlinux
-BRANCH_NAME=p10
+BRANCH_NAME=p11
 PROJECT_NAME=workenv
 DEV_NAME=savoptik
 REGISTRY=ghcr.io
