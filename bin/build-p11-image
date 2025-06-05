@@ -1,8 +1,10 @@
 #!/bin/sh -efu
 
-WORKDIR=$PWD
+SCRIPT_DIR="$( cd "$(dirname "$0")"; pwd -P )"
+source $SCRIPT_DIR/variables
 
-cd $WORKDIR
+export WORKDIR=$SCRIPT_DIR/..
+pushd $WORKDIR
 
 #create dirs
 ARTIFACTS_DIR=$WORKDIR/artifacts
@@ -13,22 +15,12 @@ ALT_CONTAINERFILE=$CONTAINER_DIR/Containerfile.alt
 
 mkdir -pv $LOGS_DIR
 
-#set names
-VENDER_NAME=altlinux
-BRANCH_NAME=p11
-PROJECT_NAME=workenv
-DEV_NAME=savoptik
-REGISTRY=ghcr.io
-IMAGE_NAME=$VENDER_NAME-$BRANCH_NAME-$PROJECT_NAME
-REF_NAME="$DEV_NAME-$IMAGE_NAME"
-TAG_NAME=full
-VERSION=1.5.2
-FULL_NAME=$REGISTRY/$DEV_NAME/$IMAGE_NAME
-
 #build image
 podman build --force-rm=true --build-arg cuid="$(id -u)" --build-arg cgid="$(id -g)" \
 	 -t $REF_NAME -f $ALT_CONTAINERFILE 2>&1 | tee $LOGS_DIR/build.log
 
 #set tags
-podman image tag $REF_NAME:latest $FULL_NAME:latest
-podman image tag $REF_NAME:latest $FULL_NAME:$TAG_NAME-$VERSION
+podman image tag $REF_NAME:latest $REGISTRY/$DEV_NAME/$IMAGE_NAME:latest
+podman image tag $REF_NAME:latest $REGISTRY/$DEV_NAME/$IMAGE_NAME:$TAG_NAME-$VERSION
+
+popd

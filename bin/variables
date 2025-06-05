@@ -1,0 +1,15 @@
+#!/bin/sh -efu
+
+export  WORKDIR="$PWD"
+
+#set names
+export  VENDER_NAME=altlinux
+export  BRANCH_NAME=p11
+export  PROJECT_NAME=workenv
+export  DEV_NAME=savoptik
+export  REGISTRY=ghcr.io
+export  IMAGE_NAME=$VENDER_NAME-$BRANCH_NAME-$PROJECT_NAME
+export  REF_NAME="$DEV_NAME-$IMAGE_NAME"
+export  TAG_NAME=full
+export  VERSION=1.6.0
+export  FULL_NAME=$REGISTRY/$DEV_NAME/$IMAGE_NAME:$TAG_NAME-$VERSION
