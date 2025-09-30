@@ -1,0 +1,66 @@
+FROM registry.altlinux.org/alt/alt:sisyphus
+
+USER root
+
+ENV ALTWRAP_LLVM_VERSION=17.0 \
+    CC=clang \
+    CXX=clang++ \
+    LD=ld.lld \
+    AR=llvm-ar \
+    NM=llvm-nm \
+    RANLIB=llvm-ranlib
+
+RUN apt-get update && apt-get dist-upgrade -y && \
+    apt-get install -y sudo su git netcat curl wget passwd startup \
+    llvm17.0-devel clang17.0-devel lld17.0-devel \
+    gcc-c++ gcc-plugin-devel libstdc++-devel \
+    glibc-core glibc-devel glibc-devel-static glib2-devel \
+    make automake cmake autoconf \
+    java-1.8.0-openjdk-devel java-11-openjdk-devel java-17-openjdk-devel java-21-openjdk-devel \
+    perl-podlators \
+    libX11-devel libXext-devel libXrender-devel \
+    libXtst-devel libXt-devel libXrandr-devel \
+    libcups-devel fontconfig-devel libalsa-devel \
+    zip unzip ruby perl \
+    strace \
+    vim-enhanced nano mc bat less patch gnuplot \
+    bash-completion
+
+WORKDIR /root
+RUN wget https://download.java.net/java/GA/jdk24/1f9ff9062db4449d8ca828c504ffae90/36/GPL/openjdk-24_linux-x64_bin.tar.gz && \
+tar -xvzf openjdk-24_linux-x64_bin.tar.gz && \
+mv -v jdk-24 /usr/lib/jvm/java-24-openjdk && \
+rm -rfv openjdk-24-ea+24_linux-x64_bin.tar.gz \
+
+ENV JAVA_HOME=/usr/lib/jvm/java-23-openjdk
+ENV JTREG_VERSION=7.3.1+1
+
+WORKDIR /home/user/
+RUN export JAVA_HOME=/usr/lib/jvm/java-21-openjdk && \
+git clone https://git.openjdk.org/jtreg && \
+cd jtreg && \
+bash make/build.sh
+
+ENV JTREG_HOME=/home/user/jtreg/build/images/jtreg/
+
+ENV TZ=Europe/Moscow
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone
+
+RUN git config --system user.email "you@example.com" && \
+    git config --system user.name "Your Name"
+
+RUN echo 'WHEEL_USERS ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+
+RUN groupadd -g 1000 user && \
+    useradd -l -m -u 1000 -g user -G wheel -s /bin/bash user
+
+RUN echo 'WHEEL_USERS ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+RUN echo "export EDITOR=nano" > /home/user/.bash_profile
+
+# Do target specific stuff (e.g. install build deps)
+
+USER user
+WORKDIR /host
+
+CMD /bin/bash
