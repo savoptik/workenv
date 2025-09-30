@@ -4,7 +4,7 @@ export  WORKDIR="$PWD"
 
 #set names
 export  VENDER_NAME=altlinux
-export  BRANCH_NAME=p11
+export  BRANCH_NAME=$1
 export  PROJECT_NAME=workenv
 export  DEV_NAME=savoptik
 export  REGISTRY=ghcr.io

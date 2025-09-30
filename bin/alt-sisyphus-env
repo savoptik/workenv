@@ -1,0 +1,17 @@
+#!/bin/sh -efu
+
+SCRIPT_DIR="$( cd "$(dirname "$0")"; pwd -P )"
+source $SCRIPT_DIR/variables sisyphus
+
+#RUN
+if [ ! -f /run/.containerenv ]; then
+mkdir -pv artifacts
+    podman run -it --rm --name $(mktemp -u $REF_NAME-XXXXXX) \
+        --security-opt seccomp=unconfined --cap-add all \
+           -v "$WORKDIR:/host" -v "./artifacts:/artifacts" \
+           --userns=keep-id:uid=1000,gid=1000 \
+           --cap-add SYS_PTRACE \
+           $FULL_NAME bash $@
+else
+    bash $@
+fi

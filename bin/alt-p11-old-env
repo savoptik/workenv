@@ -1,0 +1,31 @@
+#!/bin/sh -efu
+
+SCRIPT_DIR="$( cd "$(dirname "$0")"; pwd -P )"
+source $SCRIPT_DIR/variables p11
+
+# run
+if [ ! -f /run/.containerenv ]; then
+    uid=500
+    gid=500
+    subuidSize=$(( $(podman info --format "{{ range \
+       .Host.IDMappings.UIDMap }}+{{.Size }}{{end }}" ) - 1 ))
+    subgidSize=$(( $(podman info --format "{{ range \
+       .Host.IDMappings.GIDMap }}+{{.Size }}{{end }}" ) - 1 ))
+
+mkdir -pv artifacts
+
+    podman run -it --rm --name $(mktemp -u $REF_NAME-XXXXXX) \
+    --security-opt seccomp=unconfined --cap-add all \
+      --user $uid:$gid \
+      --uidmap 0:1:$uid \
+      --uidmap $uid:0:1 \
+      --uidmap $(($uid+1)):$(($uid+1)):$(($subuidSize-$uid)) \
+      --gidmap 0:1:$gid \
+  --gidmap $gid:0:1 \
+  --gidmap $(($gid+1)):$(($gid+1)):$(($subgidSize-$gid)) \
+           -v "$WORKDIR:/host" -v "$WORKDIR/artifacts:/artifacts" \
+           --cap-add SYS_PTRACE \
+           $FULL_NAME bash $@
+else
+    bash $@
+fi
