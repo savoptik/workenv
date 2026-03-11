@@ -16,7 +16,7 @@ RUN apt-get update && apt-get dist-upgrade -y && \
     gcc-c++ gcc-plugin-devel libstdc++-devel \
     glibc-core glibc-devel glibc-devel-static glib2-devel \
     make automake cmake autoconf \
-    java-1.8.0-openjdk-devel java-11-openjdk-devel java-17-openjdk-devel java-21-openjdk-devel \
+    java-1.8.0-openjdk-devel java-11-openjdk-devel java-17-openjdk-devel java-21-openjdk-devel java-25-openjdk-devel \
     perl-podlators \
     libX11-devel libXext-devel libXrender-devel \
     libXtst-devel libXt-devel libXrandr-devel \
@@ -28,12 +28,7 @@ RUN apt-get update && apt-get dist-upgrade -y && \
     bash-completion
 
 WORKDIR /root
-RUN wget https://download.java.net/java/GA/jdk24/1f9ff9062db4449d8ca828c504ffae90/36/GPL/openjdk-24_linux-x64_bin.tar.gz && \
-tar -xvzf openjdk-24_linux-x64_bin.tar.gz && \
-mv -v jdk-24 /usr/lib/jvm/java-24-openjdk && \
-rm -rfv openjdk-24-ea+24_linux-x64_bin.tar.gz \
-
-ENV JAVA_HOME=/usr/lib/jvm/java-24-openjdk
+ENV JAVA_HOME=/usr/lib/jvm/java-21-openjdk
 ENV JTREG_HOME=/usr/share/java/jtreg
 ENV JCOV_HOME=/usr/share/java/jcov
 
