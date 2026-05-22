@@ -2,7 +2,7 @@ FROM registry.altlinux.org/alt/alt:sisyphus
 
 USER root
 
-ENV ALTWRAP_LLVM_VERSION=17.0
+ENV ALTWRAP_LLVM_VERSION=19.1
 #    CC=clang \
 #    CXX=clang++ \
 #    LD=ld.lld \
@@ -12,8 +12,8 @@ ENV ALTWRAP_LLVM_VERSION=17.0
 
 RUN apt-get update && apt-get dist-upgrade -y && \
     apt-get install -y sudo su git netcat curl wget passwd startup \
-    llvm17.0-devel clang17.0-devel lld17.0-devel \
-    gcc-c++ gcc-plugin-devel libstdc++-devel \
+    clang19.1 lld19.1 lldb19.1 \
+    gcc-c++ gdb \
     glibc-core glibc-devel glibc-devel-static glib2-devel \
     make automake cmake autoconf \
     java-1.8.0-openjdk-devel java-11-openjdk-devel java-17-openjdk-devel java-21-openjdk-devel java-25-openjdk-devel \
