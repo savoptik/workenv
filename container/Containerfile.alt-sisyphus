@@ -12,7 +12,7 @@ ENV ALTWRAP_LLVM_VERSION=19.1
 
 RUN apt-get update && apt-get dist-upgrade -y && \
     apt-get install -y sudo su git netcat curl wget passwd startup \
-    clang19.1 lld19.1 lldb19.1 \
+    clang${ALTWRAP_LLVM_VERSION} lld${ALTWRAP_LLVM_VERSION} lldb${ALTWRAP_LLVM_VERSION} \
     gcc-c++ gdb \
     glibc-core glibc-devel glibc-devel-static glib2-devel \
     make automake cmake autoconf \
