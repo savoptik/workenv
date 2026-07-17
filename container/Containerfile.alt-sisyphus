@@ -10,6 +10,17 @@ ENV ALTWRAP_LLVM_VERSION=19.1
 #    NM=llvm-nm \
 #    RANLIB=llvm-ranlib
 
+ENV TASKS=' '
+
+RUN apt-get update && apt-get dist-upgrade -y && \
+apt-get install -y apt-repo
+
+RUN if [ -n "${TASKS}" ]; then \
+        for task in ${TASKS}; do \
+            apt-repo add task "$task"; \
+        done; \
+    fi
+
 RUN apt-get update && apt-get dist-upgrade -y && \
     apt-get install -y sudo su git netcat curl wget passwd startup \
     clang${ALTWRAP_LLVM_VERSION} lld${ALTWRAP_LLVM_VERSION} lldb${ALTWRAP_LLVM_VERSION} \
