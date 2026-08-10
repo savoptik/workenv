@@ -10,7 +10,7 @@ ENV ALTWRAP_LLVM_VERSION=19.1
 #    NM=llvm-nm \
 #    RANLIB=llvm-ranlib
 
-ENV TASKS=' '
+ENV TASKS='425550'
 
 RUN apt-get update && apt-get dist-upgrade -y && \
 apt-get install -y apt-repo
@@ -36,7 +36,8 @@ RUN apt-get update && apt-get dist-upgrade -y && \
     strace \
     jcov jtreg \
     vim-enhanced nano mc bat less patch gnuplot \
-    bash-completion
+    bash-completion \
+    libpcsclite-devel openjdk-asmtools
 
 WORKDIR /root
 ENV JAVA_HOME=/usr/lib/jvm/java-21-openjdk
